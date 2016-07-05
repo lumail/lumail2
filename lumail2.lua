@@ -2708,10 +2708,12 @@ function select()
       --
       -- The user might want to change email addresses
       -- now
-      for pattern,email in pairs(folder_from) do
-         if ( string.find( folder:path(), pattern ) )then
-            Config:set("global.sender", email )
-            Panel:append("Changed outgoing email-address to " .. email )
+      if ( folder_from ) then
+         for pattern,email in pairs(folder_from) do
+            if ( string.find( folder:path(), pattern ) )then
+               Config:set("global.sender", email )
+               Panel:append("Changed outgoing email-address to " .. email )
+            end
          end
       end
 
