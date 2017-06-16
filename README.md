@@ -3,10 +3,10 @@
 [![license](https://img.shields.io/github/license/lumail/lumail.svg)]()
 
 
-lumail2
+lumail
 =======
 
-This repository contains the `lumail2` console-based email client, with fully integrated scripting provided by Lua.
+This repository contains the `lumail` console-based email client, with fully integrated scripting provided by Lua.
 
 This is the second version of lumail which has been written, learning the lessons from the [initial version](https://github.com/lumail/lumail).  With this codebase:
 
@@ -60,7 +60,7 @@ of modes:
     * Press `H` to enter this mode, and `q` to return from it.
 
 
-Building Lumail2
+Building Lumail
 ----------------
 
 The core of the project relies upon a small number of libraries:
@@ -105,8 +105,8 @@ Running `make install` will install the binary, the libraries that we bundle, an
 
 If you wish to install manually copy:
 
-* The contents of `lib/` to `/etc/lumail2/lib`.
-* The contents of `perl.d` to `/etc/lumail2/perl.d`.
+* The contents of `lib/` to `/etc/lumail/lib`.
+* The contents of `perl.d` to `/etc/lumail/perl.d`.
 
 **NOTE**: If you wish to use IMAP you'll need to install the two perl modules `JSON` and `Net::IMAP::Client`.  Upon a Debian GNU/Linux system this can be done
 via:
@@ -115,17 +115,17 @@ via:
 
 Once installed you'll want to create your own personal configuration file.
 
-To allow smooth upgrades it is __recommended__ you do not edit the global configuration file `/etc/lumail2/lumail2.lua`.  Instead you should copy the sample user-configuration file into place:
+To allow smooth upgrades it is __recommended__ you do not edit the global configuration file `/etc/lumail/lumail.lua`.  Instead you should copy the sample user-configuration file into place:
 
-      $ mkdir ~/.lumail2/
-      $ cp lumail2.user.lua ~/.lumail2/lumail2.lua
+      $ mkdir ~/.lumail/
+      $ cp lumail.user.lua ~/.lumail/lumail.lua
 
 If you prefer you can name your configuration file after the hostname of the local system - this is useful if you store your dotfiles under revision control, and share them:
 
-      $ mkdir ~/.lumail2/
-      $ cp lumail2.user.lua ~/.lumail2/$(hostname --fqdn).lua
+      $ mkdir ~/.lumail/
+      $ cp lumail.user.lua ~/.lumail/$(hostname --fqdn).lua
 
-The defaults in [the per-user configuration file](lumail2.user.lua) should be adequately documented, but in-brief you'll want to ensure you set at least the following:
+The defaults in [the per-user configuration file](lumail.user.lua) should be adequately documented, but in-brief you'll want to ensure you set at least the following:
 
      -- Set the location of your Maildir folders, and your sent-folder
      Config:set( "maildir.prefix", os.getenv( "HOME" ) .. "/Maildir/" );
@@ -153,11 +153,11 @@ command-line flags to change the behaviour:
 
 This can be achieved like so:
 
-     $ ./lumail2 --load-path=$(pwd)/lib/ --no-default --load-file ./lumail2.lua --load-file ./lumail2.user.lua
+     $ ./lumail --load-path=$(pwd)/lib/ --no-default --load-file ./lumail.lua --load-file ./lumail.user.lua
 
 
 
-Using Lumail2
+Using Lumail
 -------------
 
 By default you'll be in the `maildir`-mode, and you can navigate with `j`/`k`, and select items with `ENTER`.

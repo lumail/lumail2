@@ -3,14 +3,14 @@
 
 The core of this project is written in C++, with extensive Lua support.
 
-The main Lua code, used for configuration, is located in the `lumail2.lua`
+The main Lua code, used for configuration, is located in the `lumail.lua`
 file, with a number of supporting libraries located beneath `lib/`.
 
 The C++ code can all be found beneath the top-level `src/` directory.
 
 For IMAP support I've chosen to delegate all operations to external perl
 code, located beneath the top-level `perl.d` directory.  On a final
-installation this will be located at `/etc/lumail2/perl.d`.
+installation this will be located at `/etc/lumail/perl.d`.
 
 
 # Code Formatting
