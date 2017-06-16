@@ -2,7 +2,7 @@
 --
 -- Usage:
 --
---     lumail2 --no-curses --load-file ./regexp.lua
+--     lumail --no-curses --load-file ./regexp.lua
 --
 
 

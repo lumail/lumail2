@@ -17,9 +17,9 @@ There are two classes of code here:
 
 If the code makes use of `print` you will know it is not designed to be run within the console TUI that lumail offers, in that case the code should be loaded:
 
-    lumail2 --no-curses --load-file $filename
+    lumail --no-curses --load-file $filename
 
 If the code is designed to run inside Lumail then do so via:
 
-    lumail2 --load-file $filename
+    lumail --load-file $filename
 

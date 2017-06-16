@@ -2,7 +2,7 @@
 --
 -- Usage:
 --
---     lumail2 --no-curses --load-file ./show_message.lua --msg path/to/show
+--     lumail --no-curses --load-file ./show_message.lua --msg path/to/show
 --
 
 function show_message (file)
@@ -100,4 +100,4 @@ end
 --
 -- No exit means we had no match.
 --
-print "Usage: lumail2 --no-curses --load-file ./show_message.lua --msg=path/to/maildir/msg"
+print "Usage: lumail --no-curses --load-file ./show_message.lua --msg=path/to/maildir/msg"

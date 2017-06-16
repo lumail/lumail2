@@ -3,11 +3,11 @@
 --
 -- To make it active copy it to either:
 --
---   ~/.lumail2/lumail2.lua
---   ~/.luamil2/$(hostname --fqdn).lua
+--   ~/.lumail/lumail.lua
+--   ~/.luamil/$(hostname --fqdn).lua
 --
 -- Changes here will override the defaults which are loaded by the
--- global configuration file (/etc/lumail2/lumail2.lua).
+-- global configuration file (/etc/lumail/lumail.lua).
 --
 -- It is *highly* recommended you follow this approach, because this
 -- will ensure that upgrades do not trash your edits.
@@ -121,22 +121,22 @@ Config:set("colour.unread", "red")
 --
 -- Save persistent history of our input in the named file.
 --
--- Create ~/.lumail2/history/ if missing
+-- Create ~/.lumail/history/ if missing
 --
-if not Directory:exists(HOME .. "/.lumail2/history") then
-  Directory:mkdir(HOME .. "/.lumail2/history")
+if not Directory:exists(HOME .. "/.lumail/history") then
+  Directory:mkdir(HOME .. "/.lumail/history")
 end
 
 --
--- Write our history to ~/.lumail2/history/$HOSTNAME.
+-- Write our history to ~/.lumail/history/$HOSTNAME.
 --
-Config:set("global.history", HOME .. "/.lumail2/history/" .. Net:hostname())
+Config:set("global.history", HOME .. "/.lumail/history/" .. Net:hostname())
 
 
 --
 -- Configure a cache-prefix, and populate it
 --
-Config:set("cache.prefix", HOME .. "/.lumail2/cache")
+Config:set("cache.prefix", HOME .. "/.lumail/cache")
 
 
 --
@@ -182,12 +182,12 @@ sorting_method "file"
 --
 --
 --   -- Setup defaults
---   Config:set( "imap.cache", HOME .. "/.lumail2/imap.cache" )
+--   Config:set( "imap.cache", HOME .. "/.lumail/imap.cache" )
 --   Config:set( "index.sort", "none" )
 --   Config:set( "index.fast", "1" )
 --
 --   -- The proxy-program we're using
---   Config:set( "imap.proxy", "/etc/lumail2/perl.d/imap-proxy" )
+--   Config:set( "imap.proxy", "/etc/lumail/perl.d/imap-proxy" )
 --
 --   -- Now setup login-details
 --   Config:set( "imap.server",   "imaps://imap.gmail.com/" )
@@ -195,7 +195,7 @@ sorting_method "file"
 --   Config:set( "imap.password", "pass.word.here" )
 --
 --  IMAP support is still a little experimental, and for more details
--- you should consult the `IMAP.md` file which comes with lumail2.
+-- you should consult the `IMAP.md` file which comes with lumail.
 --
 
 
@@ -249,7 +249,7 @@ colour_table['message'] = {
 -- and attachment-views are displayed.
 --
 -- Each of these views uses a simple template which is expanded for each
--- entry.  The defaults are set in the main `lumail2.lua` configuration file
+-- entry.  The defaults are set in the main `lumail.lua` configuration file
 -- and are as follows.
 --
 --

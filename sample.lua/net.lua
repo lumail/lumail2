@@ -2,7 +2,7 @@
 --
 -- Usage:
 --
---     lumail2 --load-file ./net.lua --no-curses
+--     lumail --load-file ./net.lua --no-curses
 --
 --
 

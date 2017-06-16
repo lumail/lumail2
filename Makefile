@@ -1,5 +1,5 @@
 #
-# This is the Makefile for compiling lumail2.
+# This is the Makefile for compiling lumail.
 #
 # It is tested to work upon Linux and Mac OS X, and may well work
 # upon other systems.
@@ -11,7 +11,7 @@
 # If you struggle to compile this on a "common" system please do report
 # a bug against the project:
 #
-#   https://github.com/lumail/lumail2
+#   https://github.com/lumail/lumail
 #
 #
 # Steve
@@ -31,7 +31,7 @@ VERSION=$(shell git describe --abbrev=4 --dirty --always --long)
 DESTDIR?=
 PREFIX?=/usr
 SYSCONFDIR?=/etc
-LUMAIL_HOME?=$(DESTDIR)$(SYSCONFDIR)/lumail2
+LUMAIL_HOME?=$(DESTDIR)$(SYSCONFDIR)/lumail
 LUMAIL_LIBS?=${LUMAIL_HOME}/lib
 #
 # Load the flags if they're not already set - first look at the version
@@ -122,7 +122,7 @@ GMIME_INC=$(shell pkg-config --cflags gmime-2.6)
 #
 #  Only build the release-target by default.
 #
-default: lumail2
+default: lumail
 
 
 #
@@ -132,7 +132,7 @@ clean:
 	test -d docs/              && rm -rf docs              || true
 	test -d $(RELEASE_OBJDIR)  && rm -rf $(RELEASE_OBJDIR) || true
 	test -d $(DEBUG_OBJDIR)    && rm -rf $(DEBUG_OBJDIR)   || true
-	rm -f gmon.out lumail2 lumail2-debug core              || true
+	rm -f gmon.out lumail lumail-debug core                || true
 	find . -name '*.orig' -delete                          || true
 
 
@@ -147,13 +147,13 @@ DEBUG_OBJECTS   := $(SOURCES:$(SRCDIR)/%.cc=$(DEBUG_OBJDIR)/%.o)
 #
 #  The release-build.
 #
-lumail2: $(RELEASE_OBJECTS)
+lumail: $(RELEASE_OBJECTS)
 	$(LINKER) $@ $(LFLAGS) $(RELEASE_OBJECTS) $(LDLIBS) $(GMIME_LIBS)
 
 #
 #  The debug-build.
 #
-lumail2-debug: $(DEBUG_OBJECTS)
+lumail-debug: $(DEBUG_OBJECTS)
 	$(LINKER) $@ $(LFLAGS) -rdynamic -ggdb -pg $(DEBUG_OBJECTS) $(LDLIBS) $(GMIME_LIBS)
 
 
@@ -207,22 +207,22 @@ serve_docs: docs
 #
 # Run our test-cases, from the main binary.
 #
-test: lumail2
-	./lumail2 --test
+test: lumail
+	./lumail --test
 
 #
 # Run our lua test-cases
 #
-test-lua: lumail2
-	for i in t/test*.lua; do ./lumail2 --no-default --load-file $$i --no-curses || exit 1; done
+test-lua: lumail
+	for i in t/test*.lua; do ./lumail --no-default --load-file $$i --no-curses || exit 1; done
 
 
 #
 #  Install the binary, and our luarocks.d directory
 #
-install: lumail2
+install: lumail
 	mkdir -p $(DESTDIR)$(PREFIX)/bin || true
-	install -m755 lumail2 $(DESTDIR)$(PREFIX)/bin/
+	install -m755 lumail $(DESTDIR)$(PREFIX)/bin/
 
 	# make target-directories
 	mkdir -p $(LUMAIL_HOME)/lib/  || true
@@ -240,13 +240,13 @@ install: lumail2
 	rm $(LUMAIL_HOME)/perl.d/set-flags || true
 
 	# if there is an old config in-place then rename it.
-	mv $(LUMAIL_HOME)/lumail2.lua $(LUMAIL_HOME)/lumail2.lua.$$(date +%d-%m-%Y.%s) || true
+	mv $(LUMAIL_HOME)/lumail.lua $(LUMAIL_HOME)/lumail.lua.$$(date +%d-%m-%Y.%s) || true
 	# Deploy the new config
-	cp ./lumail2.lua $(LUMAIL_HOME)/lumail2.lua
+	cp ./lumail.lua $(LUMAIL_HOME)/lumail.lua
 
 
 #
 #  Test for leaks; use the debug-build so we get line-number information, etc.
 #
-valgrind: lumail2-debug
-	valgrind  --leak-check=full --show-leak-kinds=all --track-origins=yes ./lumail2-debug  --load-file ./lumail2.lua 2>leak.log
+valgrind: lumail-debug
+	valgrind  --leak-check=full --show-leak-kinds=all --track-origins=yes ./lumail-debug  --load-file ./lumail.lua 2>leak.log

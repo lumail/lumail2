@@ -2,7 +2,7 @@
 --
 -- Usage:
 --
---     lumail2 --load-file ./mime_type.lua --no-curses
+--     lumail --load-file ./mime_type.lua --no-curses
 --
 --
 

@@ -14,8 +14,8 @@
 --
 -- The license text is included in the LICENSE file at the root of the project.
 --
--- The algorithm uses lumail2's message objects so it won't work outside of
--- lumail2. But changing the message representation shouldn't be very hard.
+-- The algorithm uses lumail's message objects so it won't work outside of
+-- lumail. But changing the message representation shouldn't be very hard.
 --
 ----
 -----
