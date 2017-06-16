@@ -25,7 +25,7 @@
 /**
  * This is a index-view of the screen - it shows lists of *messages*.
  *
- * The list is created, and maintained, by lumail2, but the drawing is
+ * The list is created, and maintained, by lumail, but the drawing is
  * deferred to Lua.
  */
 class CIndexView: public CBasicView

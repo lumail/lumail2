@@ -1,43 +1,43 @@
 --
--- Lumail2 configuration-file
+-- Lumail configuration-file
 --
 -----------------------------------------------------------------------------
 -----------------------------------------------------------------------------
 --
--- This is global configuration file for the Lumail 2.x command-line email
+-- This is global configuration file for the Lumail command-line email
 -- client, which is configured solely by Lua.
 --
 -- The client will load two files at startup if they exist:
 --
---    /etc/lumail2/lumail2.lua
+--    /etc/lumail/lumail.lua
 --       * Which will then load $HOSTNAME.lua
---    $XDG_CONFIG_HOME/lumail2/lumail2.lua, ~/.config/lumail2/lumail2.lua
---      or ~/.lumail2/lumail2.lua
+--    $XDG_CONFIG_HOME/lumail/lumail.lua, ~/.config/lumail/lumail.lua
+--      or ~/.lumail/lumail.lua
 --
 -- The expectation is that you will NOT EDIT this file, instead
 -- you will place your own configuration in one of:
 --
---   $XDG_CONFIG_HOME/lumail2/$HOSTNAME.lua
---   $XDG_CONFIG_HOME/lumail2/lumail2.lua
+--   $XDG_CONFIG_HOME/lumail/$HOSTNAME.lua
+--   $XDG_CONFIG_HOME/lumail/lumail.lua
 --
---   ~/.config/lumail2/$HOSTNAME.lua
---   ~/.config/lumail2/lumail2.lua
+--   ~/.config/lumail/$HOSTNAME.lua
+--   ~/.config/lumail/lumail.lua
 
---   ~/.lumail2/$HOSTNAME.lua
---   ~/.lumail2/lumail2.lua
+--   ~/.lumail/$HOSTNAME.lua
+--   ~/.lumail/lumail.lua
 --
 --
 -- CONFIGURATION
 ----------------
 --
 -- While you may edit this file it is recommended you do not, instead you
--- should copy the sample file `lumail2.user.lua` into place, and edit it:
+-- should copy the sample file `lumail.user.lua` into place, and edit it:
 --
---     cp lumail2.user.lua ~/.lumail2/lumail2.lua
+--     cp lumail.user.lua ~/.lumail/lumail.lua
 --
 -- If you prefer:
 --
---     cp lumail2.user.lua ~/.lumail2/$(hostname --fqdn).lua
+--     cp lumail.user.lua ~/.lumail/$(hostname --fqdn).lua
 --
 -- This will make upgrading less painful.
 --
@@ -45,7 +45,7 @@
 -- DOCUMENTATION
 ----------------
 --
--- For reference to the lumail2 objects please see the API documentation
+-- For reference to the lumail objects please see the API documentation
 -- included within the repository as `API.md`, or browsable online at:
 --
 --    http://lumail.org/api/
@@ -2651,9 +2651,9 @@ function lua_view ()
 
 
   --
-  -- Show the version of lumail2 & lua.
+  -- Show the version of lumail & lua.
   --
-  table.insert(output, "$[RED]This $[GREEN]is $[YELLOW|UNDERLINE|BOLD]Lumail2$[CYAN|NORMAL] version $[BLUE|BOLD]" .. Config:get "global.version" .. " " .. lver)
+  table.insert(output, "$[RED]This $[GREEN]is $[YELLOW|UNDERLINE|BOLD]Lumail$[CYAN|NORMAL] version $[BLUE|BOLD]" .. Config:get "global.version" .. " " .. lver)
   table.insert(output, "")
 
   table.insert(output, "$[RED]This RED - and not $[#GREEN]!")
@@ -2906,7 +2906,7 @@ end
 --
 -- Given a line of text escape any colour-definitions
 --
--- The formatting of colours that lumail2 uses is very
+-- The formatting of colours that lumail uses is very
 -- simple, the following is an example:
 --
 --   $[RED]This is red $[GREEN]This is green.
@@ -3843,8 +3843,8 @@ end
 -- So, for example, define the function `on_XX()` in your personal
 -- configuration file, which is one of:
 --
---    ~/.lumail2/$HOSTNAME.lua
---    ~/.lumail2/lumail2.lua
+--    ~/.lumail/$HOSTNAME.lua
+--    ~/.lumail/lumail.lua
 --
 -- Assuming XX is a number then the function will be invoked at that
 -- frequency.  So `on_1()` will be invoked every second, `on_2()` every
@@ -4002,12 +4002,12 @@ end
 local host = Net:hostname()
 local filename = host .. ".lua"
 local location = os.getenv("XDG_CONFIG_HOME") or os.getenv("HOME") .. "/.config"
-location = location .. "/lumail2/"
+location = location .. "/lumail/"
 if File:exists(location .. filename) then
   dofile(location .. filename)
   info_msg("Loaded " .. location .. filename)
 else
-  location = os.getenv("HOME") .. "/.lumail2/"
+  location = os.getenv("HOME") .. "/.lumail/"
   if File:exists(location .. filename) then
     dofile(location .. filename)
     info_msg("Loaded " .. location .. filename)

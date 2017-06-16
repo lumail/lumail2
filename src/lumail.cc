@@ -1,5 +1,5 @@
 /*
- * lumail2.cc - Application entry-point.
+ * lumail.cc - Application entry-point.
  *
  * This file is part of lumail - http://lumail.org/
  *
@@ -95,24 +95,24 @@ int main(int argc, char *argv[])
      * Default to loading some configuration files, if they
      * exist
      */
-    if (CFile::exists("/etc/lumail2/lumail2.lua"))
-        load.push_back("/etc/lumail2/lumail2.lua");
+    if (CFile::exists("/etc/lumail/lumail.lua"))
+        load.push_back("/etc/lumail/lumail.lua");
 
     /*
      * Get the user config file.
-     * 1. $XDG_CONFIG_HOME/lumail2/lumail2.lua
-     * 2. $XDG_CONFIG_HOME/lumail2/config.lua
-     * 3. $HOME/.config/lumail2/lumail2.lua
-     * 4. $HOME/.config/lumail2/config.lua
-     * 5. $HOME/.lumail2/lumail2.lua
-     * 6. $HOME/.lumail2/config.lua
+     * 1. $XDG_CONFIG_HOME/lumail/lumail.lua
+     * 2. $XDG_CONFIG_HOME/lumail/config.lua
+     * 3. $HOME/.config/lumail/lumail.lua
+     * 4. $HOME/.config/lumail/config.lua
+     * 5. $HOME/.lumail/lumail.lua
+     * 6. $HOME/.lumail/config.lua
      */
     std::string conf_dir;
-    std::string filenames[] = {"/lumail2.lua", "/config.lua"};
+    std::string filenames[] = {"/lumail.lua", "/config.lua"};
     if (getenv("XDG_CONFIG_HOME") != NULL)
     {
         conf_dir = getenv("XDG_CONFIG_HOME");
-        conf_dir = conf_dir + "/lumail2/";
+        conf_dir = conf_dir + "/lumail/";
         for (int i = 0; i < 2; i++)
         {
             if (CFile::exists(conf_dir + filenames[i]))
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
     {
         /* Try XDG_CONFIG_HOME default ~/.config */
         std::string home = getenv("HOME");
-        conf_dir = home + "/.config/lumail2";
+        conf_dir = home + "/.config/lumail";
         if (!conf_dir.empty())
         {
             for (int i = 0; i < 2; i++)
@@ -138,10 +138,10 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        /* Try ~/.lumail2/ */
+        /* Try ~/.lumail/ */
         else
         {
-            conf_dir = home + "/.lumail2";
+            conf_dir = home + "/.lumail";
             for (int i = 0; i < 2; i++)
             {
                 if (CFile::exists(conf_dir + filenames[i]))
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
             break;
 
         case 'v':
-            std::cout << "Lumail2 " << LUMAIL_VERSION << std::endl;
+            std::cout << "Lumail " << LUMAIL_VERSION << std::endl;
             return 0;
             break;
         }
@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
      *
      * We MUST do this before we load any configuration files because
      * otherwise our listeners will not run, which means that things
-     * like `global.history`, despite being defined in the lumail2.lua
+     * like `global.history`, despite being defined in the lumail.lua
      * file, will not get broadcast, and the setting will be worthless.
      *
      */

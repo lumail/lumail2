@@ -82,7 +82,7 @@ void CIMAPProxy::launch()
         std::string path = config->get_string("imap.proxy");
 
         if (path.empty())
-            path = "/etc/lumail2/perl.d/imap-proxy" ;
+            path = "/etc/lumail/perl.d/imap-proxy" ;
 
 
         /*

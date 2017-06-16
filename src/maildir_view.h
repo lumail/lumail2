@@ -26,7 +26,7 @@
 /**
  * This is a maildir-view of the screen - it shows lists of *maildirs*.
  *
- * The list is created/maintained by lumail2, but the drawing is  deferred to Lua.
+ * The list is created/maintained by lumail, but the drawing is  deferred to Lua.
  */
 class CMaildirView: public CBasicView
 {

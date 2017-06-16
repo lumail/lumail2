@@ -1,6 +1,6 @@
-# Lumail 2
+# Lumail
 
-Lumail2 is a console-based email client that operates upon Maildir
+Lumail is a console-based email client that operates upon Maildir
 hierarchies.
 
 The implementation of the client consists of both a C++ core and a

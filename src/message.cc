@@ -757,7 +757,7 @@ std::shared_ptr<CMessagePart> CMessage::part2obj(GMimeObject *part)
          *
          * g_object_unref(msg);
          *
-         *  https://github.com/lumail/lumail2/issues/292
+         *  https://github.com/lumail/lumail/issues/292
          *
          */
 
@@ -1125,7 +1125,7 @@ void CMessage::add_attachments(std::vector<std::string> attachments)
      */
     CConfig *config     = CConfig::instance();
     std::string tmp_dir = config->get_string("global.tmpdir", "/tmp");
-    std::string tmp_pat = tmp_dir + "/lumail2XXXXXXXX";
+    std::string tmp_pat = tmp_dir + "/lumailXXXXXXXX";
     char *tmp_file      = strdup(tmp_pat.c_str());
 
     result = mkstemp(tmp_file);

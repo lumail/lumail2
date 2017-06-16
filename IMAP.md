@@ -10,8 +10,8 @@ below, then you can configure your instance of lumail to use a remote
 IMAP server via the following settings:
 
      --[[ Defaults ]]
-     Config:set( "imap.cache", HOME .. "/.lumail2/imap.cache" )
-     Config:set( "imap.proxy", "/etc/lumail2/perl.d/imap-proxy" )
+     Config:set( "imap.cache", HOME .. "/.lumail/imap.cache" )
+     Config:set( "imap.proxy", "/etc/lumail/perl.d/imap-proxy" )
      Config:set( "index.sort", "none" )
      Config:set( "index.fast", "1" )
 
@@ -41,7 +41,7 @@ If you prefer you can launch the proxy manually:
      export imap_password=bob
      export imap_server=imaps://imap.example.com
 
-     perl /etc/lumail2/perl.d/imap-proxy --verbose
+     perl /etc/lumail/perl.d/imap-proxy --verbose
 
 With this running you can then launch Lumail.
 

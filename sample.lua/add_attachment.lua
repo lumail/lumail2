@@ -2,7 +2,7 @@
 --
 -- Usage:
 --
---     lumail2 --load-file ./add_attachment.lua --no-curses
+--     lumail --load-file ./add_attachment.lua --no-curses
 --
 --
 

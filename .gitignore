@@ -1,7 +1,7 @@
 obj.debug/
 obj.release/
-lumail2
-lumail2-debug
+lumail
+lumail-debug
 docs/
-lumail2.log
+lumail.log
 *.orig

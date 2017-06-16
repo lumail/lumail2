@@ -2,7 +2,7 @@
 --
 -- Usage:
 --
---     lumail2 --no-curses --load-file ./config.lua
+--     lumail --no-curses --load-file ./config.lua
 --
 
 

@@ -86,7 +86,7 @@ void CStatusPanel::init(int rows)
 
         if (name.substr(0, 6) != "lumail")
         {
-            name = "lumail2 [" + name + "]";
+            name = "lumail [" + name + "]";
         }
 
         m_text.push_back("$[WHITE|BOLD]" + name + "$[WHITE] by Steve Kemp");
