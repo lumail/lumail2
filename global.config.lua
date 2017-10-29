@@ -3939,6 +3939,7 @@ function complete_lua(buffer)
 
   for name, object in pairs(objs) do
     for key, _ in pairs(object) do
+      -- TODO escape token
       if not string.match(key, "^_") and string.match(name .. key, "^" .. token) then
         table.insert(ret, name .. key)
       end
@@ -3982,7 +3983,7 @@ function complete_path(buffer)
   elseif not string.match(token, "^/") then
     -- get pwd
     local handle = io.popen("pwd")
-    local pwd = handle:read("*a")
+    local pwd = handle:read("*a"):sub(0, -2) --strip new line
     handle:close()
     token = pwd .. "/" .. token
   end
@@ -4000,10 +4001,13 @@ function complete_path(buffer)
   --
   -- If the directory exists then add all the entries to the completion-set.
   --
-  if File:exists(dir) then
+  if Directory:exists(dir) then
     entries = Directory:entries(dir)
     for i, v in ipairs(entries) do
       if string.match(v, "^" .. token) then
+        if Directory:exists(v) then
+          v = v .. "/"
+        end
         table.insert(ret, v)
       end
     end
