@@ -4001,10 +4001,13 @@ function complete_path(buffer)
   --
   -- If the directory exists then add all the entries to the completion-set.
   --
-  if File:exists(dir) then
+  if Directory:exists(dir) then
     entries = Directory:entries(dir)
     for i, v in ipairs(entries) do
       if string.match(v, "^" .. token) then
+        if Directory:exists(v) then
+          v = v .. "/"
+        end
         table.insert(ret, v)
       end
     end

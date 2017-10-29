@@ -21,6 +21,7 @@
 #include <dirent.h>
 
 #include "directory.h"
+#include "file.h"
 #include "util.h"
 
 /*
@@ -28,10 +29,13 @@
  */
 bool CDirectory::exists(std::string path)
 {
-    struct stat sb;
+    DIR* dir = opendir(path.c_str());
 
-    if ((stat(path.c_str(), &sb) == 0))
+    if (dir != NULL)
+    {
+        closedir(dir);
         return true;
+    }
     else
         return false;
 }
@@ -92,7 +96,7 @@ void CDirectory::mkdir_p(std::string path)
         }
 
         if (! todo.empty())
-            if (! CDirectory::exists(todo))
+            if (! CFile::exists(todo))
                 mkdir(todo.c_str(), 0755);
     }
 }
