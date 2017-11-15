@@ -148,6 +148,22 @@ int l_CMessage_path(lua_State * l)
     return 1;
 }
 
+/**
+ * Implementation for Message:replace()
+ */
+int l_CMessage_replace(lua_State * l)
+{
+    CLuaLog("l_CMessage_replace");
+
+    std::shared_ptr<CMessage> msg = l_CheckCMessage(l, 1);
+    const char *str = luaL_checkstring(l, 2);
+
+    if (msg)
+        msg->replace(str);
+
+    return 0;
+}
+
 
 /**
  * Implementation for Message:generate_message_id()
@@ -315,7 +331,7 @@ int l_CMessage_parts(lua_State * l)
 
 
 /**
- * Implementation of CMessage:add_attachments
+ * Implementation for CMessage:add_attachments()
  */
 int l_CMessage_add_attachments(lua_State * l)
 {
@@ -350,7 +366,7 @@ int l_CMessage_add_attachments(lua_State * l)
 
 
 /**
- * Implementation of CMessage:ctime()
+ * Implementation for CMessage:ctime()
  */
 int l_CMessage_ctime(lua_State * l)
 {
@@ -386,7 +402,7 @@ int l_CMessage_ctime(lua_State * l)
 
 
 /**
- * Implementation of CMessage:flags
+ * Implementation for CMessage:flags()
  */
 int l_CMessage_flags(lua_State * l)
 {
@@ -458,7 +474,7 @@ int l_CMessage_equality(lua_State * l)
 
 
 /**
- * Implementation of CMessage:unlink
+ * Implementation for CMessage:unlink()
  */
 int l_CMessage_unlink(lua_State * l)
 {
@@ -478,6 +494,23 @@ int l_CMessage_unlink(lua_State * l)
     global->update_messages();
 
     return 0;
+}
+
+/**
+ * Implementation for CMessage:needs_gpg()
+ */
+int l_CMessage_need_gpg(lua_State * l)
+{
+    CLuaLog("l_CMessage_needs_gpg");
+
+    std::shared_ptr<CMessage> msg = l_CheckCMessage(l, 1);
+
+    if (msg)
+        lua_pushboolean(l , msg->need_gpg());
+    else
+        lua_pushboolean(l , 0);
+
+    return 1;
 }
 
 /**
@@ -502,7 +535,9 @@ void InitMessage(lua_State * l)
         {"new", l_CMessage_constructor},
         {"parts", l_CMessage_parts},
         {"path", l_CMessage_path},
+        {"replace", l_CMessage_replace},
         {"unlink", l_CMessage_unlink},
+        {"need_gpg", l_CMessage_need_gpg},
         {NULL, NULL}
     };
     luaL_newmetatable(l, "luaL_CMessage");

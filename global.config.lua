@@ -2384,15 +2384,12 @@ function Message:format (thread_indent, index)
   -- unrelated to the flags a message might have.
   --
   --   A => Message has attachments.
-  --   S => Message is signed.
+  --   G => Message is signed or encrypted.
   --
-  local m_flags = ""
+  local m_flags = self:need_gpg() and "G" or ""
   local parts = mimeparts2table(self)
   local a_count = 0
   for i, o in ipairs(parts) do
-    if o['type'] == "text/x-gpg-output" then
-      m_flags = m_flags .. "S"
-    end
     if o['filename'] ~= nil and o['filename'] ~= "" then
       a_count = a_count + 1
     end
@@ -2929,12 +2926,15 @@ function message_view (msg)
   end
 
   if not msg then
-    return {
-      "No message selected!",
+    return "No message selected!"
+  end
 
-
-
-    }
+  -- Replace the message if its encrypted or signed
+  if msg:need_gpg() then
+    local tmpfile = GPG.decrypt(msg:path())
+    if tmpfile ~= "" then
+      msg:replace(tmpfile)
+    end
   end
 
   --

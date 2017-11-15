@@ -37,6 +37,7 @@ CMessagePart::CMessagePart(std::string type, std::string filename,
     m_filename       = filename;
     m_content        = NULL;
     m_content_length = 0;
+    m_need_gpg       = false;
 
     if ((content_length > 0) && (content != NULL))
     {

@@ -87,6 +87,16 @@ public:
      */
     std::shared_ptr<CMessagePart> get_parent();
 
+    /**
+     * Does this part need gpg ?
+     */
+    bool need_gpg() { return m_need_gpg; }
+
+    /**
+     * Set m_need_gpg
+     */
+    void need_gpg(bool b) {  m_need_gpg = b; }
+
 
 private:
 
@@ -120,4 +130,9 @@ private:
      * Parent of this part.
      */
     std::shared_ptr<CMessagePart> m_parent;
+
+    /**
+     * Is this part a signature or encrypted  ?
+     */
+    bool m_need_gpg;
 };
