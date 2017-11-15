@@ -62,6 +62,7 @@ CMessage::CMessage(const std::string name, bool is_local)
     m_path = name;
     m_time = 0;
     m_imap = !is_local;
+    m_need_gpg = false;
 }
 
 
@@ -78,6 +79,21 @@ std::string CMessage::path()
 
 
 /*
+ * Return if the message needs gpg to be useful.
+ */
+bool CMessage::need_gpg()
+{
+    /*
+     * Call get_parts to be sure m_need_gpg is set correctly.
+     * If get_parts was called before we don't do much because the parts are cached.
+     */
+    get_parts();
+
+    return m_need_gpg;
+}
+
+
+/*
  * Update the path to the message.
  */
 void CMessage::path(std::string new_path)
@@ -85,6 +101,27 @@ void CMessage::path(std::string new_path)
     m_path = new_path;
 }
 
+/*
+ * Replace the message with the content of a temporary file which will be
+ * deleted.
+ */
+void CMessage::replace(std::string tmp_file)
+{
+    std::string old_path = path();
+    path(tmp_file);
+
+    /* Clear the old message. */
+    m_headers.clear();
+    m_parts.clear();
+
+    /* Reparse the message. */
+    headers();
+    get_parts();
+
+    path(old_path);
+    /* Delete temporary file. */
+    CFile::delete_file(tmp_file);
+}
 
 /*
  * Return the value of a given header.
@@ -869,7 +906,16 @@ std::shared_ptr<CMessagePart> CMessage::part2obj(GMimeObject *part)
              * Now add the child to the parent.
              */
             ret->add_child(child);
+
+            /* Does the child need gpg? */
+            if (!ret->need_gpg())
+                ret->need_gpg(child->need_gpg());
         }
+    }
+
+    /* Do we need gpg ? */
+    if (!ret->need_gpg()) {
+        ret->need_gpg((strstr(type, "gpg") != NULL) || (strstr(type, "pgp") != NULL));
     }
 
     /*
@@ -909,6 +955,16 @@ std::vector<std::shared_ptr<CMessagePart> >CMessage::get_parts()
     }
 
     m_parts.push_back(part2obj(mime_part));
+
+    /*
+     * Does any part need gpg ?
+     */
+    for (size_t i = 0; i < m_parts.size(); i++) {
+        if (m_parts[i]->need_gpg()) {
+            m_need_gpg = true;
+            break;
+        }
+    }
 
     g_object_unref(message);
 

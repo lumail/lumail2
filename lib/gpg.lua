@@ -1,4 +1,20 @@
 --
+-- Decrypt the message into a temporary file and return its path.
+--
+local decrypt = function(path)
+  --
+  -- Do we have the binary we want?
+  --
+  if string.path "mimegpg" ~= "" then
+    local out = os.tmpname()
+    os.execute("mimegpg -d -c -- --batch < " .. path .. " > " .. out)
+    return out
+  else
+    return ""
+  end
+end
+
+--
 -- This is a function which is inserted into the *MIDDLE*
 -- of a message parsing operation.
 --
@@ -21,7 +37,7 @@
 --
 -- OR
 --
---  * THis function may generate and return a filename.  That file
+--  * This function may generate and return a filename.  That file
 --    will be operated upon instead of the input message, and once
 --    parsed will be deleted.
 --
@@ -59,22 +75,16 @@ _G['message_replace'] = function (path)
   if found == false then
     return ""
   end
-  --
-  -- Do we have the binary we want?
-  --
-  if string.path "mimegpg" ~= "" then
-    local out = os.tmpname()
-    os.execute("mimegpg -d -c -- --batch < " .. path .. " > " .. out)
-    return out
-  else
-    return ""
-  end
+  return decrypt(path)
 end
+
 
 --
 -- GPG module
 --
 local gpg = {}
+
+gpg.decrypt = decrypt
 
 --
 -- Return the arguments for mimegpg

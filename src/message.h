@@ -78,6 +78,11 @@ public:
     void path(std::string new_path);
 
     /**
+     * Replace the message.
+     */
+    void replace(std::string new_path);
+
+    /**
      * Get the value of the given header.
      */
     std::string header(std::string name);
@@ -193,6 +198,11 @@ public:
      */
     int get_mtime();
 
+    /**
+     * Does this message need gpg ?
+     */
+    bool need_gpg();
+
 private:
 
     /**
@@ -252,6 +262,12 @@ private:
      * The parent folder.
      */
     std::shared_ptr<CMaildir> m_parent;
+
+    /**
+     * Is this message signed or encrypted
+     */
+    bool m_need_gpg;
+
 };
 
 
