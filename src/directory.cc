@@ -19,6 +19,7 @@
 
 #include <sys/stat.h>
 #include <dirent.h>
+#include <string.h>
 
 #include "directory.h"
 #include "util.h"
@@ -56,11 +57,13 @@ std::vector < std::string > CDirectory::entries(std::string prefix)
             /*
              * Build up a string - removing duplicate "/" characters.
              */
-            std::string r = prefix + "/" + de->d_name;
-            r.erase(std::unique(r.begin(), r.end(), both_slashes()), r.end());
+            if (strcmp(de->d_name, "..") != 0 && strcmp(de->d_name, ".") != 0) {
+                std::string r = prefix + "/" + de->d_name;
+                r.erase(std::unique(r.begin(), r.end(), both_slashes()), r.end());
 
 
-            result.push_back(r);
+                result.push_back(r);
+            }
         }
     }
 
