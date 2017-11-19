@@ -241,28 +241,19 @@ GMimeMessage * CMessage::parse_message()
     return (message);
 }
 
-
-/*
- * Return all header-names, and their values.
+/**
+ * Populate the headers and MIME-Parts caches.
  */
-std::unordered_map < std::string, std::string > CMessage::headers()
-{
-    /*
-     * If we've cached these then return that copy.
-     */
-    if (m_headers.size() > 0)
-        return (m_headers);
-
+void CMessage::populate_message() {
 
     GMimeMessage *msg = parse_message();
 
     if (msg == NULL)
     {
         CLua *lua = CLua::instance();
-        lua->on_error("Failed to get headers from message :" + path());
-        return (m_headers);
+        lua->on_error("Failed to populate message :" + path());
+        return;
     }
-
 
     const char *name;
     const char *value;
@@ -306,7 +297,29 @@ std::unordered_map < std::string, std::string > CMessage::headers()
     g_mime_header_list_clear(ls);
     g_mime_header_iter_free(iter);
 
+    /* Parse into MIME-Parts */
+
+    GMimeObject *mime_part = g_mime_message_get_mime_part(msg);
+
+    if (!mime_part)
+        return;
+
+    m_parts.push_back(part2obj(mime_part));
+
     g_object_unref(msg);
+}
+
+
+/*
+ * Return all header-names, and their values.
+ */
+std::unordered_map < std::string, std::string > CMessage::headers()
+{
+    /*
+     * If we've cached these then return that copy.
+     */
+    if (m_headers.size() == 0)
+        populate_message();
 
     return (m_headers);
 }
@@ -891,26 +904,8 @@ std::vector<std::shared_ptr<CMessagePart> >CMessage::get_parts()
      *
      * A message can't/won't change under our feet.
      */
-    if (m_parts.size() > 0)
-        return (m_parts);
-
-    GMimeMessage *message = parse_message();
-
-    if (! message)
-    {
-        return m_parts;
-    }
-
-    GMimeObject *mime_part = g_mime_message_get_mime_part(message);
-
-    if (!mime_part)
-    {
-        return m_parts;
-    }
-
-    m_parts.push_back(part2obj(mime_part));
-
-    g_object_unref(message);
+    if (m_parts.size() == 0)
+        populate_message();
 
     return (m_parts);
 }

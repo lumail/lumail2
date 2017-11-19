@@ -207,6 +207,11 @@ private:
     GMimeMessage * parse_message();
 
     /**
+     * Populate the headers and MIME-Parts caches.
+     */
+    void populate_message();
+
+    /**
      * Convert a message-part from the MIME message to a CMessagePart object.
      */
     std::shared_ptr<CMessagePart> part2obj(GMimeObject *part);
