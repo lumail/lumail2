@@ -109,7 +109,7 @@ std::string CMessage::header(std::string name)
  * Parse a MIME message and return an object suitable for operating
  * upon.
  */
-GMimeMessage * CMessage::parse_message()
+GMimeMessage * CMessage::parse_message(int fd)
 {
 
     /*
@@ -124,7 +124,6 @@ GMimeMessage * CMessage::parse_message()
     GMimeMessage * message;
     GMimeParser *parser;
     GMimeStream *stream;
-    int fd;
 
     /*
      * The filename we'll operate upon.
@@ -132,39 +131,41 @@ GMimeMessage * CMessage::parse_message()
     std::string file = path();
     bool replaced = false;
 
-    /*
-     * There is a Lua filter which *might* return an *updated* path to
-     * use.
-     */
-    CLua *lua = CLua::instance();
-
-    if (lua->function_exists("message_replace"))
+    if (fd < 2)
     {
-        std::string updated = lua->function2string("message_replace", file);
-
-        if (! updated.empty())
-        {
-            file = updated;
-            replaced = true;
-        }
-    }
-
-
-    if ((fd = open(file.c_str(), O_RDONLY, 0)) == -1)
-    {
-
-        std::string error = strerror(errno);
+        /*
+         * There is a Lua filter which *might* return an *updated* path to
+         * use.
+         */
         CLua *lua = CLua::instance();
 
-        if (CFile::exists(path()))
-            lua->on_error("Failed to open the existing message file:" + path() + " " + error);
-        else
-            lua->on_error("Failed to open the message file - not found :" + path() + " " + error);
+        if (lua->function_exists("message_replace"))
+        {
+            std::string updated = lua->function2string("message_replace", file);
 
-        if (replaced == true)
-            CFile::delete_file(file);
+            if (! updated.empty())
+            {
+                file = updated;
+                replaced = true;
+            }
+        }
 
-        return (NULL);
+        if ((fd = open(file.c_str(), O_RDONLY, 0)) == -1)
+        {
+
+            std::string error = strerror(errno);
+            CLua *lua = CLua::instance();
+
+            if (CFile::exists(path()))
+                lua->on_error("Failed to open the existing message file:" + path() + " " + error);
+            else
+                lua->on_error("Failed to open the message file - not found :" + path() + " " + error);
+
+            if (replaced == true)
+                CFile::delete_file(file);
+
+            return (NULL);
+        }
     }
 
     stream = g_mime_stream_fs_new(fd);
@@ -185,11 +186,9 @@ GMimeMessage * CMessage::parse_message()
     {
 
         /*
-         * Close the file and retry parsing it, by opening it and
-         * skipping two lines.
+         * Rewind the file and retry parsing it, by skipping two lines.
          */
-        close(fd);
-        fd = open(file.c_str(), O_RDONLY, 0);
+        lseek(fd, 0, SEEK_SET);
 
         int newline = 2;
         int count   = 1024;
@@ -244,9 +243,9 @@ GMimeMessage * CMessage::parse_message()
 /**
  * Populate the headers and MIME-Parts caches.
  */
-void CMessage::populate_message() {
+void CMessage::populate_message(int fd) {
 
-    GMimeMessage *msg = parse_message();
+    GMimeMessage *msg = parse_message(fd);
 
     if (msg == NULL)
     {
@@ -319,7 +318,7 @@ std::unordered_map < std::string, std::string > CMessage::headers()
      * If we've cached these then return that copy.
      */
     if (m_headers.size() == 0)
-        populate_message();
+        populate_message(-1);
 
     return (m_headers);
 }
@@ -905,7 +904,7 @@ std::vector<std::shared_ptr<CMessagePart> >CMessage::get_parts()
      * A message can't/won't change under our feet.
      */
     if (m_parts.size() == 0)
-        populate_message();
+        populate_message(-1);
 
     return (m_parts);
 }

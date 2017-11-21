@@ -98,7 +98,7 @@ void push_cmessage(lua_State * l, std::shared_ptr<CMessage> message)
 }
 
 /**
- * Implementation for Message.new
+ * Implementation for Message.new()
  */
 int l_CMessage_constructor(lua_State * l)
 {
@@ -148,6 +148,27 @@ int l_CMessage_path(lua_State * l)
     return 1;
 }
 
+/**
+ * Implementation for Message:replace()
+ *
+ * Reread message from file.
+ */
+int l_CMessage_replace(lua_State * l)
+{
+    CLuaLog("l_CMessage_replace");
+
+    std::shared_ptr<CMessage> msg = l_CheckCMessage(l, 1);
+    if (msg)
+    {
+        /* Get file from lua */
+        FILE *f = *(FILE**) luaL_checkudata(l, 2, LUA_FILEHANDLE);
+        const int fd = fileno(f);
+
+        /* Reread message */
+        msg->populate_message(fd);
+    }
+    return 0;
+}
 
 /**
  * Implementation for Message:generate_message_id()
@@ -178,7 +199,6 @@ int l_CMessage_generate_message_id(lua_State *L)
     return 1;
 
 }
-
 
 /**
  * Implementation for Message:header()
@@ -237,7 +257,6 @@ int l_CMessage_headers(lua_State * l)
     return (1);
 }
 
-
 /**
  * Implementation for Message:mark_read()
  */
@@ -262,7 +281,6 @@ int l_CMessage_mark_unread(lua_State *l)
     return 0;
 }
 
-
 /**
  * Implementation for Message:mtime()
  */
@@ -276,7 +294,6 @@ int l_CMessage_mtime(lua_State *l)
     lua_pushnumber(l, m_time);
     return 1;
 }
-
 
 /**
  * Implementation for Message:parts()
@@ -313,9 +330,8 @@ int l_CMessage_parts(lua_State * l)
     return 1;
 }
 
-
 /**
- * Implementation of CMessage:add_attachments
+ * Implementation for CMessage:add_attachments()
  */
 int l_CMessage_add_attachments(lua_State * l)
 {
@@ -348,9 +364,8 @@ int l_CMessage_add_attachments(lua_State * l)
     return 0;
 }
 
-
 /**
- * Implementation of CMessage:ctime()
+ * Implementation for CMessage:ctime()
  */
 int l_CMessage_ctime(lua_State * l)
 {
@@ -384,9 +399,8 @@ int l_CMessage_ctime(lua_State * l)
     return 1;
 }
 
-
 /**
- * Implementation of CMessage:flags
+ * Implementation for CMessage:flags()
  */
 int l_CMessage_flags(lua_State * l)
 {
@@ -433,7 +447,6 @@ int l_CMessage_destructor(lua_State * l)
     return 0;
 }
 
-
 /**
  * Equality-test - this is bound to the Lua meta-method `__eq` such that two
  * messages may be tested for equality.
@@ -456,9 +469,8 @@ int l_CMessage_equality(lua_State * l)
     return 1;
 }
 
-
 /**
- * Implementation of CMessage:unlink
+ * Implementation for CMessage:unlink()
  */
 int l_CMessage_unlink(lua_State * l)
 {
@@ -502,6 +514,7 @@ void InitMessage(lua_State * l)
         {"new", l_CMessage_constructor},
         {"parts", l_CMessage_parts},
         {"path", l_CMessage_path},
+        {"replace", l_CMessage_replace},
         {"unlink", l_CMessage_unlink},
         {NULL, NULL}
     };

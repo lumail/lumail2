@@ -16,9 +16,7 @@
  * General Public License can be found in `/usr/share/common-licenses/GPL-2'
  */
 
-
 #pragma once
-
 
 #include <memory>
 #include <string>
@@ -32,8 +30,6 @@ class CMaildir;
  * Forward declaration of class.
  */
 class CMessagePart;
-
-
 
 /**
  *
@@ -60,12 +56,10 @@ public:
      */
     bool is_maildir();
 
-
     /**
      * Is this message an IMAP one?
      */
     bool is_imap();
-
 
     /**
       * Get the path of this message.
@@ -109,7 +103,6 @@ public:
     {
         m_imap_id = n;
     };
-
 
     /**
      * Add a flag to a message.
@@ -163,7 +156,6 @@ public:
      */
     std::vector<std::shared_ptr<CMessagePart>> get_parts();
 
-
     /**
      * Add the named file as an attachment to this message.
      */
@@ -177,7 +169,6 @@ public:
      * the message.
      */
     std::shared_ptr<CMaildir> parent();
-
 
     /**
      * Set the parent object - this is only used for IMAP-based messages.
@@ -193,6 +184,11 @@ public:
      */
     int get_mtime();
 
+    /**
+     * Populate the headers and MIME-Parts caches.
+     */
+    void populate_message(int fd);
+
 private:
 
     /**
@@ -202,14 +198,9 @@ private:
 
     /**
      * Parse a MIME message and return an object suitable for operating
-     * upon.
+     * upon. If fd is less than 2 m_path is used to find the message.
      */
-    GMimeMessage * parse_message();
-
-    /**
-     * Populate the headers and MIME-Parts caches.
-     */
-    void populate_message();
+    GMimeMessage * parse_message(int fd);
 
     /**
      * Convert a message-part from the MIME message to a CMessagePart object.
@@ -258,8 +249,6 @@ private:
      */
     std::shared_ptr<CMaildir> m_parent;
 };
-
-
 
 /**
  * This is a utility-type which contains a list of messages, as
