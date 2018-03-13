@@ -17,8 +17,12 @@
  */
 
 #include <algorithm>
+#include <array>
+#include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <memory>
+#include <stdexcept>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -411,6 +415,30 @@ void CScreen::execute(std::string prog)
      */
     reset_prog_mode();
     refresh();
+}
+
+/*
+ * Execute a command via `system`.
+ *
+ * This variant returns the `stdout` of the command run
+ */
+std::string CScreen::execute_read_stdout(std::string program)
+{
+    std::array<char, 128>   buffer;
+    std::string             result;
+    std::shared_ptr<FILE>   pipe(popen(program.c_str(), "r"), pclose);
+
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+
+    while (!feof(pipe.get())) {
+        if (fgets(buffer.data(), 128, pipe.get()) != nullptr) {
+            result += buffer.data();
+        }
+    }
+
+    return result;
 }
 
 /*

@@ -204,6 +204,13 @@ public:
     void execute(std::string program);
 
     /**
+     * Execute a program, resetting the screen first.
+     *
+     * This variant returns the `stdout` of the command run.
+     */
+    std::string execute_read_stdout(std::string program);
+
+    /**
      * Is the given character a multi-key prefix?
      */
     bool is_prefixed_key(const char *key);
