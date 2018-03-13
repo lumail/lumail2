@@ -91,6 +91,27 @@ int l_CScreen_execute(lua_State *l)
 
 }
 
+/**
+ * Implementation of Screen:execute_read_stdout().
+ *
+ * Returns the string on success, on error reading stdout it returns nil.
+ */
+int l_CScreen_execute_read_stdout(lua_State *l)
+{
+    CLuaLog("l_CScreen_execute_read_stdout");
+    const char *prog = luaL_checkstring(l, 2);
+
+    CScreen *foo = CScreen::instance();
+
+    try {
+        std::string output = foo->execute_read_stdout(prog);
+        lua_pushstring(l, output.c_str());
+    } catch (std::runtime_error& e) {
+        lua_pushnil(l);
+    }
+
+    return 0;
+}
 
 /**
  * Implementation of Screen:exit().
@@ -277,6 +298,7 @@ void InitScreen(lua_State * l)
         {"clear", l_CScreen_clear},
         {"draw", l_CScreen_draw},
         {"execute",  l_CScreen_execute},
+        {"execute_read_stdout",  l_CScreen_execute_read_stdout},
         {"exit",  l_CScreen_exit},
         {"get_char", l_CScreen_get_char},
         {"get_line", l_CScreen_get_line},
